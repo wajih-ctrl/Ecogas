@@ -1,5 +1,6 @@
 'use client';
 
+import type { CSSProperties } from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 
@@ -26,7 +27,10 @@ export function PremiumSelect({
 }: PremiumSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [opensUpward, setOpensUpward] = useState(false);
+  const [menuMaxHeight, setMenuMaxHeight] = useState(256);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const selectedOption = options.find(opt => opt.value === value);
   const filteredOptions = searchable
@@ -34,6 +38,31 @@ export function PremiumSelect({
     : options;
 
   useEffect(() => {
+    function updateMenuPosition() {
+      const trigger = triggerRef.current;
+      if (!trigger) return;
+
+      const rect = trigger.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const isDesktop = window.matchMedia('(min-width: 640px)').matches;
+
+      if (!isDesktop) {
+        setOpensUpward(false);
+        setMenuMaxHeight(Math.max(220, viewportHeight - 120));
+        return;
+      }
+
+      const gutter = 16;
+      const preferredHeight = searchable ? 336 : 272;
+      const spaceBelow = viewportHeight - rect.bottom - gutter;
+      const spaceAbove = rect.top - gutter;
+      const shouldOpenUpward = spaceBelow < preferredHeight && spaceAbove > spaceBelow;
+      const availableSpace = shouldOpenUpward ? spaceAbove : spaceBelow;
+
+      setOpensUpward(shouldOpenUpward);
+      setMenuMaxHeight(Math.max(176, Math.min(preferredHeight, availableSpace)));
+    }
+
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
@@ -41,16 +70,29 @@ export function PremiumSelect({
     }
 
     if (isOpen) {
+      updateMenuPosition();
       document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      window.addEventListener('resize', updateMenuPosition);
+      window.addEventListener('scroll', updateMenuPosition, true);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        window.removeEventListener('resize', updateMenuPosition);
+        window.removeEventListener('scroll', updateMenuPosition, true);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, searchable]);
+
+  const menuStyle = {
+    '--select-menu-max-height': `${menuMaxHeight}px`,
+    '--select-options-max-height': `${Math.max(128, menuMaxHeight - (searchable ? 74 : 0))}px`,
+  } as CSSProperties;
 
   return (
     <div className={`flex flex-col ${className}`}>
       {label && <label className="block text-sm font-semibold text-slate-700 mb-2">{label}</label>}
       <div className="relative" ref={dropdownRef}>
         <button
+          ref={triggerRef}
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
@@ -74,7 +116,12 @@ export function PremiumSelect({
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 z-40 bg-slate-950/20 backdrop-blur-[1px] sm:hidden"
             />
-            <div className="fixed left-4 right-4 top-16 bottom-4 z-50 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.28)] sm:absolute sm:top-full sm:left-0 sm:right-0 sm:bottom-auto sm:mt-2 sm:max-h-none sm:rounded-xl sm:shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+            <div
+              style={menuStyle}
+              className={`fixed left-4 right-4 top-16 bottom-4 z-50 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.28)] sm:absolute sm:left-0 sm:right-0 sm:bottom-auto sm:max-h-[var(--select-menu-max-height)] sm:rounded-xl sm:shadow-[0_18px_45px_rgba(15,23,42,0.16)] ${
+                opensUpward ? 'sm:top-auto sm:bottom-full sm:mb-2' : 'sm:top-full sm:mt-2'
+              }`}
+            >
             {searchable && (
               <div className="p-3 border-b border-slate-200">
                 <div className="relative">
@@ -89,7 +136,7 @@ export function PremiumSelect({
                 </div>
               </div>
             )}
-            <div className="max-h-[54vh] overflow-y-auto overscroll-contain sm:max-h-64">
+            <div className="max-h-[54vh] overflow-y-auto overscroll-contain sm:max-h-[var(--select-options-max-height)]">
               {filteredOptions.length === 0 ? (
                 <div className="px-4 py-3 text-sm text-slate-500">No options found</div>
               ) : (

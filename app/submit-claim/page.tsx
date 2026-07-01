@@ -3,13 +3,16 @@
 import { AppLayout } from '@/components/app-layout';
 import { useRouter } from 'next/navigation';
 import { useAppState } from '@/lib/use-app-state';
-import { useState, useMemo } from 'react';
+import type { ChangeEvent, DragEvent, KeyboardEvent } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Plus, Upload } from 'lucide-react';
 import { contractorPackages, contractors, mockPackages } from '@/lib/mock-data';
 
 export default function SubmitClaimPage() {
   const router = useRouter();
   const { currentUser, currentRole, selectedContractor, addClaim } = useAppState();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [attachmentNames, setAttachmentNames] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     type: 'Claim',
     package: '',
@@ -23,6 +26,26 @@ export default function SubmitClaimPage() {
     contractor: '',
   });
   const [confirmation, setConfirmation] = useState('');
+
+  const updateAttachments = (files: FileList | File[]) => {
+    setAttachmentNames(Array.from(files).map(file => file.name));
+  };
+
+  const handleAttachmentChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) updateAttachments(e.target.files);
+  };
+
+  const handleAttachmentDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length > 0) updateAttachments(e.dataTransfer.files);
+  };
+
+  const handleAttachmentKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
+    }
+  };
 
   const availablePackages = useMemo(() => {
     if (currentRole !== 'contractor') return mockPackages;
@@ -81,7 +104,7 @@ export default function SubmitClaimPage() {
       auditTrail: [
         { timestamp: new Date().toLocaleDateString(), user: currentUser?.name || '', action: 'Submitted', details: formData.description || 'Initial submission' },
       ],
-      documents: ['receipt.pdf'],
+      documents: attachmentNames.length > 0 ? attachmentNames : ['receipt.pdf'],
     };
 
     addClaim(newClaim);
@@ -122,7 +145,7 @@ export default function SubmitClaimPage() {
       ownerRole: 'Construction Manager',
       daysStatus: 30,
       auditTrail: [{ timestamp: new Date().toLocaleDateString(), user: currentUser?.name || '', action: 'Draft Saved', details: formData.description || 'Draft created' }],
-      documents: [],
+      documents: attachmentNames,
     });
     setConfirmation('Draft saved in local prototype state.');
   };
@@ -333,10 +356,35 @@ export default function SubmitClaimPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-900 mb-2">Attachments</label>
-              <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#1b5e3f] hover:bg-slate-50 transition-all">
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.csv"
+                onChange={handleAttachmentChange}
+                className="sr-only"
+              />
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => fileInputRef.current?.click()}
+                onKeyDown={handleAttachmentKeyDown}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleAttachmentDrop}
+                className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#1b5e3f] hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-[#14533b] transition-all"
+              >
                 <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                 <p className="text-slate-600 text-sm">Drag and drop files or click to upload</p>
                 <p className="text-xs text-slate-500 mt-1">PDF, Excel, Word documents supported</p>
+                {attachmentNames.length > 0 && (
+                  <div className="mt-4 flex flex-wrap justify-center gap-2">
+                    {attachmentNames.map(name => (
+                      <span key={name} className="rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-[#14533b]">
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
