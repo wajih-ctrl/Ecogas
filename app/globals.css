@@ -214,7 +214,17 @@
   .premium-table-wrap table,
   table {
     @apply w-full text-sm;
-    min-width: 760px;
+    min-width: 920px;
+    border-collapse: collapse;
+    table-layout: auto;
+  }
+
+  table:has(th:nth-child(8)) {
+    min-width: 1120px;
+  }
+
+  table:has(th:nth-child(9)) {
+    min-width: 1240px;
   }
 
   thead {
@@ -222,11 +232,43 @@
   }
 
   th {
-    @apply px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600 border-b border-slate-200;
+    @apply h-12 px-5 py-3.5 align-middle text-left text-[11px] font-bold uppercase tracking-[0.08em] text-slate-600 border-b border-slate-200;
+    white-space: nowrap;
   }
 
   td {
-    @apply px-5 py-4 align-middle text-slate-700 border-b border-slate-100;
+    @apply h-14 px-5 py-4 align-middle text-slate-700 border-b border-slate-100;
+    line-height: 1.45;
+  }
+
+  td span[class*='rounded'],
+  th span[class*='rounded'],
+  .status-badge {
+    display: inline-flex;
+    width: max-content;
+    max-width: none;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    line-height: 1.15;
+  }
+
+  th > *,
+  td > * {
+    vertical-align: middle;
+  }
+
+  td.flex {
+    display: table-cell;
+  }
+
+  .table-actions {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .table-actions button,
+  td button {
+    @apply inline-flex min-h-8 items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold leading-none;
   }
 
   @media (max-width: 767px) {
@@ -271,7 +313,9 @@
   }
 
   select {
-    @apply cursor-pointer pr-10 font-medium;
+    @apply cursor-pointer pl-3.5 font-medium;
+    min-width: 9.5rem;
+    padding-right: 3.5rem !important;
     color: #17211c;
     background-color: #fff;
     appearance: none;
@@ -279,8 +323,8 @@
       linear-gradient(45deg, transparent 50%, #14533b 50%),
       linear-gradient(135deg, #14533b 50%, transparent 50%);
     background-position:
-      calc(100% - 18px) calc(50% - 2px),
-      calc(100% - 13px) calc(50% - 2px);
+      calc(100% - 26px) calc(50% - 2px),
+      calc(100% - 20px) calc(50% - 2px);
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
   }
@@ -294,10 +338,347 @@
   }
 
   .modal-shell {
-    @apply fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm;
+    @apply fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm;
   }
 
   .modal-card {
     @apply w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,0.24)];
+    max-height: min(86vh, 720px);
+    overflow-y: auto;
+  }
+
+  input[type='checkbox'] {
+    @apply h-4 w-4 min-h-0 shrink-0 rounded border-slate-300 p-0 text-[#14533b] shadow-none focus:ring-2 focus:ring-emerald-100;
+    accent-color: #14533b;
+  }
+
+  label:has(input[type='checkbox']) {
+    @apply flex items-center gap-3;
+  }
+
+  .clickable-card {
+    @apply cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-[0_10px_30px_rgba(15,23,42,0.045)] transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.08)] focus:outline-none focus:ring-4 focus:ring-emerald-100;
+  }
+
+  .dark,
+  .dark body {
+    background-color: #151f1b !important;
+    color: #f8fafc !important;
+  }
+
+  .dark .bg-white {
+    background-color: #1f2522 !important;
+  }
+
+  .dark header,
+  .dark aside,
+  .dark .premium-panel,
+  .dark .premium-card,
+  .dark .modal-card,
+  .dark .clickable-card,
+  .dark .premium-table-wrap {
+    background-color: #1f2522 !important;
+    color: #f8fafc !important;
+  }
+
+  .dark .border-slate-200,
+  .dark .border-slate-100,
+  .dark .border-slate-300 {
+    border-color: rgb(71 85 105 / 0.7) !important;
+  }
+
+  .dark .text-slate-950,
+  .dark .text-slate-900,
+  .dark .text-slate-800,
+  .dark .text-slate-700 {
+    color: #f8fafc !important;
+  }
+
+  .dark .text-slate-600,
+  .dark .text-slate-500,
+  .dark .text-slate-400 {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .bg-slate-50,
+  .dark .bg-slate-100,
+  .dark thead {
+    background-color: #26302b !important;
+  }
+
+  .dark .bg-red-50,
+  .dark .bg-red-100,
+  .dark .bg-red-200 {
+    background-color: #3a1f22 !important;
+  }
+
+  .dark .bg-amber-50,
+  .dark .bg-amber-100,
+  .dark .bg-amber-200,
+  .dark .bg-orange-50,
+  .dark .bg-orange-100,
+  .dark .bg-orange-200 {
+    background-color: #3b2a17 !important;
+  }
+
+  .dark .bg-green-50,
+  .dark .bg-green-100,
+  .dark .bg-emerald-50,
+  .dark .bg-emerald-100,
+  .dark .bg-blue-50,
+  .dark .bg-blue-100,
+  .dark .bg-purple-50,
+  .dark .bg-purple-100,
+  .dark .bg-indigo-100 {
+    background-color: #20352d !important;
+  }
+
+  .dark .text-red-900,
+  .dark .text-red-800,
+  .dark .text-red-700,
+  .dark .text-red-600 {
+    color: #fca5a5 !important;
+  }
+
+  .dark .text-amber-900,
+  .dark .text-amber-800,
+  .dark .text-amber-700,
+  .dark .text-amber-600,
+  .dark .text-orange-900,
+  .dark .text-orange-800,
+  .dark .text-orange-700,
+  .dark .text-orange-600 {
+    color: #fcd58d !important;
+  }
+
+  .dark .text-green-900,
+  .dark .text-green-800,
+  .dark .text-green-700,
+  .dark .text-green-600,
+  .dark .text-emerald-800,
+  .dark .text-emerald-700,
+  .dark .text-blue-900,
+  .dark .text-blue-800,
+  .dark .text-blue-700,
+  .dark .text-blue-600,
+  .dark .text-purple-900,
+  .dark .text-purple-700 {
+    color: #9ee6c4 !important;
+  }
+
+  .dark .text-white {
+    color: #ffffff !important;
+  }
+
+  .dark .hover\:bg-slate-50:hover,
+  .dark .hover\:bg-slate-100:hover,
+  .dark .hover\:bg-slate-200:hover,
+  .dark .hover\:bg-white:hover,
+  .dark tbody tr:hover {
+    background-color: #2b3a33 !important;
+    color: #f8fafc !important;
+  }
+
+  .dark .hover\:bg-red-50:hover,
+  .dark .hover\:bg-red-100:hover,
+  .dark .hover\:bg-red-200:hover {
+    background-color: #4a2529 !important;
+  }
+
+  .dark .hover\:bg-blue-50:hover,
+  .dark .hover\:bg-blue-100:hover,
+  .dark .hover\:bg-blue-200:hover,
+  .dark .hover\:bg-green-50:hover,
+  .dark .hover\:bg-green-100:hover,
+  .dark .hover\:bg-green-200:hover,
+  .dark .hover\:bg-amber-50:hover,
+  .dark .hover\:bg-amber-100:hover,
+  .dark .hover\:bg-amber-200:hover,
+  .dark .hover\:bg-orange-50:hover,
+  .dark .hover\:bg-orange-100:hover,
+  .dark .hover\:bg-orange-200:hover {
+    background-color: #314337 !important;
+  }
+
+  .dark .hover\:text-slate-950:hover,
+  .dark .hover\:text-slate-700:hover,
+  .dark .hover\:text-slate-600:hover {
+    color: #ffffff !important;
+  }
+
+  .dark ::selection {
+    background-color: #2d6a4f;
+    color: #ffffff;
+  }
+
+  .dark input,
+  .dark textarea,
+  .dark select,
+  .dark option {
+    background-color: #1f2522 !important;
+    color: #f8fafc !important;
+    border-color: rgb(71 85 105 / 0.8) !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light),
+    :root:not(.light) body {
+      background-color: #151f1b !important;
+      color: #f8fafc !important;
+    }
+
+    :root:not(.light) .bg-white {
+      background-color: #1f2522 !important;
+    }
+
+    :root:not(.light) header,
+    :root:not(.light) aside,
+    :root:not(.light) .premium-panel,
+    :root:not(.light) .premium-card,
+    :root:not(.light) .modal-card,
+    :root:not(.light) .clickable-card,
+    :root:not(.light) .premium-table-wrap {
+      background-color: #1f2522 !important;
+      color: #f8fafc !important;
+    }
+
+    :root:not(.light) .border-slate-200,
+    :root:not(.light) .border-slate-100,
+    :root:not(.light) .border-slate-300 {
+      border-color: rgb(71 85 105 / 0.7) !important;
+    }
+
+    :root:not(.light) .text-slate-950,
+    :root:not(.light) .text-slate-900,
+    :root:not(.light) .text-slate-800,
+    :root:not(.light) .text-slate-700 {
+      color: #f8fafc !important;
+    }
+
+    :root:not(.light) .text-slate-600,
+    :root:not(.light) .text-slate-500,
+    :root:not(.light) .text-slate-400 {
+      color: #cbd5e1 !important;
+    }
+
+    :root:not(.light) .bg-slate-50,
+    :root:not(.light) .bg-slate-100,
+    :root:not(.light) thead {
+      background-color: #26302b !important;
+    }
+
+    :root:not(.light) .bg-red-50,
+    :root:not(.light) .bg-red-100,
+    :root:not(.light) .bg-red-200 {
+      background-color: #3a1f22 !important;
+    }
+
+    :root:not(.light) .bg-amber-50,
+    :root:not(.light) .bg-amber-100,
+    :root:not(.light) .bg-amber-200,
+    :root:not(.light) .bg-orange-50,
+    :root:not(.light) .bg-orange-100,
+    :root:not(.light) .bg-orange-200 {
+      background-color: #3b2a17 !important;
+    }
+
+    :root:not(.light) .bg-green-50,
+    :root:not(.light) .bg-green-100,
+    :root:not(.light) .bg-emerald-50,
+    :root:not(.light) .bg-emerald-100,
+    :root:not(.light) .bg-blue-50,
+    :root:not(.light) .bg-blue-100,
+    :root:not(.light) .bg-purple-50,
+    :root:not(.light) .bg-purple-100,
+    :root:not(.light) .bg-indigo-100 {
+      background-color: #20352d !important;
+    }
+
+    :root:not(.light) .text-red-900,
+    :root:not(.light) .text-red-800,
+    :root:not(.light) .text-red-700,
+    :root:not(.light) .text-red-600 {
+      color: #fca5a5 !important;
+    }
+
+    :root:not(.light) .text-amber-900,
+    :root:not(.light) .text-amber-800,
+    :root:not(.light) .text-amber-700,
+    :root:not(.light) .text-amber-600,
+    :root:not(.light) .text-orange-900,
+    :root:not(.light) .text-orange-800,
+    :root:not(.light) .text-orange-700,
+    :root:not(.light) .text-orange-600 {
+      color: #fcd58d !important;
+    }
+
+    :root:not(.light) .text-green-900,
+    :root:not(.light) .text-green-800,
+    :root:not(.light) .text-green-700,
+    :root:not(.light) .text-green-600,
+    :root:not(.light) .text-emerald-800,
+    :root:not(.light) .text-emerald-700,
+    :root:not(.light) .text-blue-900,
+    :root:not(.light) .text-blue-800,
+    :root:not(.light) .text-blue-700,
+    :root:not(.light) .text-blue-600,
+    :root:not(.light) .text-purple-900,
+    :root:not(.light) .text-purple-700 {
+      color: #9ee6c4 !important;
+    }
+
+    :root:not(.light) .text-white {
+      color: #ffffff !important;
+    }
+
+    :root:not(.light) .hover\:bg-slate-50:hover,
+    :root:not(.light) .hover\:bg-slate-100:hover,
+    :root:not(.light) .hover\:bg-slate-200:hover,
+    :root:not(.light) .hover\:bg-white:hover,
+    :root:not(.light) tbody tr:hover {
+      background-color: #2b3a33 !important;
+      color: #f8fafc !important;
+    }
+
+    :root:not(.light) .hover\:bg-red-50:hover,
+    :root:not(.light) .hover\:bg-red-100:hover,
+    :root:not(.light) .hover\:bg-red-200:hover {
+      background-color: #4a2529 !important;
+    }
+
+    :root:not(.light) .hover\:bg-blue-50:hover,
+    :root:not(.light) .hover\:bg-blue-100:hover,
+    :root:not(.light) .hover\:bg-blue-200:hover,
+    :root:not(.light) .hover\:bg-green-50:hover,
+    :root:not(.light) .hover\:bg-green-100:hover,
+    :root:not(.light) .hover\:bg-green-200:hover,
+    :root:not(.light) .hover\:bg-amber-50:hover,
+    :root:not(.light) .hover\:bg-amber-100:hover,
+    :root:not(.light) .hover\:bg-amber-200:hover,
+    :root:not(.light) .hover\:bg-orange-50:hover,
+    :root:not(.light) .hover\:bg-orange-100:hover,
+    :root:not(.light) .hover\:bg-orange-200:hover {
+      background-color: #314337 !important;
+    }
+
+    :root:not(.light) .hover\:text-slate-950:hover,
+    :root:not(.light) .hover\:text-slate-700:hover,
+    :root:not(.light) .hover\:text-slate-600:hover {
+      color: #ffffff !important;
+    }
+
+    :root:not(.light) ::selection {
+      background-color: #2d6a4f;
+      color: #ffffff;
+    }
+
+    :root:not(.light) input,
+    :root:not(.light) textarea,
+    :root:not(.light) select,
+    :root:not(.light) option {
+      background-color: #1f2522 !important;
+      color: #f8fafc !important;
+      border-color: rgb(71 85 105 / 0.8) !important;
+    }
   }
 }

@@ -118,37 +118,39 @@ export default function UsersPage() {
                         {user.status === 'active' ? 'Active' : 'Inactive'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <button
-                        onClick={() => handleViewAccess(user.id)}
-                        className="p-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded"
-                        title="View access"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleViewAccess(user.id)}
-                        className="p-1 text-slate-600 hover:text-slate-700 hover:bg-slate-100 rounded"
-                        title="Edit user"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      {user.status === 'active' && (
+                    <td className="px-6 py-4">
+                      <div className="table-actions">
                         <button
-                          onClick={() => handleDeactivate(user.id)}
-                          className="p-1 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded"
-                          title="Deactivate"
+                          onClick={() => handleViewAccess(user.id)}
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          title="View access"
                         >
-                          <X className="w-4 h-4" />
+                          <Eye className="w-4 h-4" />
                         </button>
-                      )}
-                      <button
-                        onClick={() => handleRemoveUser(user.id)}
-                        className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded"
-                        title="Remove user"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                        <button
+                          onClick={() => handleViewAccess(user.id)}
+                          className="text-slate-600 hover:text-slate-700 hover:bg-slate-100"
+                          title="Edit user"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        {user.status === 'active' && (
+                          <button
+                            onClick={() => handleDeactivate(user.id)}
+                            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                            title="Deactivate"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleRemoveUser(user.id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          title="Remove user"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -159,8 +161,8 @@ export default function UsersPage() {
 
         {/* Add User Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="modal-shell">
+            <div className="modal-card max-w-md">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Add New User</h2>
               <div className="space-y-4">
                 <div>
@@ -221,9 +223,9 @@ export default function UsersPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-900 mb-2">Assign to Packages</label>
-                  <div className="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-lg p-2">
+                  <div className="space-y-2 max-h-44 overflow-y-auto border border-slate-200 rounded-xl p-3">
                     {mockPackages.map(pkg => (
-                      <label key={pkg.id} className="flex items-center gap-2 cursor-pointer">
+                      <label key={pkg.id} className="cursor-pointer rounded-lg px-2 py-1.5 hover:bg-slate-50">
                         <input
                           type="checkbox"
                           checked={newUser.packages.includes(pkg.id)}
@@ -261,8 +263,8 @@ export default function UsersPage() {
 
         {/* View Access Modal */}
         {viewingUserId && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-            <div className="bg-white w-full max-w-md rounded-lg shadow-2xl p-8 max-h-[80vh] overflow-y-auto">
+          <div className="modal-shell">
+            <div className="modal-card max-w-md">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-slate-900">User Access</h2>
                 <button onClick={() => setViewingUserId(null)} className="text-slate-400 hover:text-slate-600">

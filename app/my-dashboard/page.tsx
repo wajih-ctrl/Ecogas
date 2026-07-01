@@ -84,7 +84,7 @@ export default function ContractorDashboard() {
 
         {/* Overview Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <button type="button" onClick={() => router.push('/my-claims')} className="clickable-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-slate-500 mb-1">Total Claims Submitted</p>
@@ -92,9 +92,9 @@ export default function ContractorDashboard() {
               </div>
               <Clock className="w-8 h-8 text-blue-500" />
             </div>
-          </div>
+          </button>
 
-          <div className="bg-white rounded-lg border border-green-200 p-4">
+          <button type="button" onClick={() => router.push('/my-claims?filter=approved')} className="clickable-card border-green-200">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-slate-500 mb-1">Approved</p>
@@ -102,9 +102,9 @@ export default function ContractorDashboard() {
               </div>
               <CheckCircle className="w-8 h-8 text-green-500" />
             </div>
-          </div>
+          </button>
 
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <button type="button" onClick={() => router.push('/my-claims?filter=awaiting')} className="clickable-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-slate-500 mb-1">Awaiting Response</p>
@@ -112,9 +112,9 @@ export default function ContractorDashboard() {
               </div>
               <AlertCircle className="w-8 h-8 text-amber-500" />
             </div>
-          </div>
+          </button>
 
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <button type="button" onClick={() => router.push('/my-claims')} className="clickable-card">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-slate-500 mb-1">Total Value Submitted</p>
@@ -122,7 +122,7 @@ export default function ContractorDashboard() {
               </div>
               <DollarSign className="w-8 h-8 text-amber-500" />
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Action Alert */}

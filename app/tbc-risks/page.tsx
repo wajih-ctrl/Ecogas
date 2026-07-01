@@ -2,7 +2,7 @@
 
 import { AppLayout } from '@/components/app-layout';
 import { useAppState } from '@/lib/use-app-state';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { contractors, mockPackages } from '@/lib/mock-data';
 import { AlertCircle, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
@@ -11,6 +11,15 @@ export default function TBCRisksPage() {
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedGapId, setSelectedGapId] = useState<string | null>(null);
   const [selectedContractor, setSelectedContractor] = useState('');
+
+  useEffect(() => {
+    const section = new URLSearchParams(window.location.search).get('section');
+    if (section) {
+      window.setTimeout(() => {
+        document.getElementById(`section-${section}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }, []);
 
   const handleAssignContractor = () => {
     if (selectedGapId && selectedContractor) {
@@ -45,8 +54,8 @@ export default function TBCRisksPage() {
     return gap.riskLevel === 'Urgent' ? 'Gap/TBC Urgent' : 'Gap/TBC Standard';
   };
 
-  const renderGapsTable = (gaps: typeof tbcGaps, title: string, bgColor: string, headerColor: string, icon: React.ReactNode) => (
-    <div className={`${bgColor} rounded-lg border overflow-hidden mt-6`}>
+  const renderGapsTable = (gaps: typeof tbcGaps, title: string, bgColor: string, headerColor: string, icon: React.ReactNode, sectionId: string) => (
+    <div id={`section-${sectionId}`} className={`${bgColor} rounded-lg border overflow-hidden mt-6 scroll-mt-24`}>
       <div className={`p-6 border-b`}>
         <div className="flex items-center gap-3 mb-2">
           {icon}
@@ -121,27 +130,27 @@ export default function TBCRisksPage() {
 
         {/* Summary Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-red-50 rounded-lg border border-red-200 p-4">
+          <button type="button" onClick={() => document.getElementById('section-cfo')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="clickable-card border-red-200 bg-red-50">
             <p className="text-xs text-red-700 mb-2 font-semibold">Pre-processing CFO Unassigned</p>
             <p className="text-3xl font-bold text-red-700">{preProcessingCFO.length}</p>
-          </div>
-          <div className="bg-orange-50 rounded-lg border border-orange-200 p-4">
+          </button>
+          <button type="button" onClick={() => document.getElementById('section-urgent')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="clickable-card border-orange-200 bg-orange-50">
             <p className="text-xs text-orange-700 mb-2 font-semibold">Gap/TBC Urgent</p>
             <p className="text-3xl font-bold text-orange-700">{gapTbcUrgent.length}</p>
-          </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200 p-4">
+          </button>
+          <button type="button" onClick={() => document.getElementById('section-standard')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="clickable-card bg-slate-50">
             <p className="text-xs text-slate-600 mb-2 font-semibold">Gap/TBC Standard</p>
             <p className="text-3xl font-bold text-slate-900">{gapTbcStandard.length}</p>
-          </div>
-          <div className="bg-purple-50 rounded-lg border border-purple-200 p-4">
+          </button>
+          <button type="button" onClick={() => document.getElementById('section-commission')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="clickable-card border-purple-200 bg-purple-50">
             <p className="text-xs text-purple-700 mb-2 font-semibold">Commission-phase TBC</p>
             <p className="text-3xl font-bold text-purple-700">{commissionPhaseTBC.length}</p>
-          </div>
+          </button>
         </div>
 
         {/* SECTION 1: Pre-processing CFO Fully Unassigned (Top Priority) */}
         {preProcessingCFO.length > 0 && (
-          <div className="bg-red-50 rounded-lg border-2 border-red-300 p-8">
+          <div id="section-cfo" className="bg-red-50 rounded-lg border-2 border-red-300 p-8 scroll-mt-24">
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-6 h-6 text-red-600" />
@@ -194,18 +203,18 @@ export default function TBCRisksPage() {
         )}
 
         {/* SECTION 2: Gap/TBC Urgent */}
-        {gapTbcUrgent.length > 0 && renderGapsTable(gapTbcUrgent, 'Gap/TBC Urgent', 'bg-orange-50 border-orange-200', 'bg-orange-100 border-b border-orange-200', <AlertTriangle className="w-5 h-5 text-orange-600" />)}
+        {gapTbcUrgent.length > 0 && renderGapsTable(gapTbcUrgent, 'Gap/TBC Urgent', 'bg-orange-50 border-orange-200', 'bg-orange-100 border-b border-orange-200', <AlertTriangle className="w-5 h-5 text-orange-600" />, 'urgent')}
 
         {/* SECTION 3: Gap/TBC Standard */}
-        {gapTbcStandard.length > 0 && renderGapsTable(gapTbcStandard, 'Gap/TBC Standard', 'bg-slate-50 border-slate-200', 'bg-slate-100 border-b border-slate-200', <AlertCircle className="w-5 h-5 text-slate-600" />)}
+        {gapTbcStandard.length > 0 && renderGapsTable(gapTbcStandard, 'Gap/TBC Standard', 'bg-slate-50 border-slate-200', 'bg-slate-100 border-b border-slate-200', <AlertCircle className="w-5 h-5 text-slate-600" />, 'standard')}
 
         {/* SECTION 4: Commission-phase TBC (Supply Confirmed, Commission TBC) */}
-        {commissionPhaseTBC.length > 0 && renderGapsTable(commissionPhaseTBC, 'Commission-phase TBC', 'bg-purple-50 border-purple-200', 'bg-purple-100 border-b border-purple-200', <CheckCircle2 className="w-5 h-5 text-purple-600" />)}
+        {commissionPhaseTBC.length > 0 && renderGapsTable(commissionPhaseTBC, 'Commission-phase TBC', 'bg-purple-50 border-purple-200', 'bg-purple-100 border-b border-purple-200', <CheckCircle2 className="w-5 h-5 text-purple-600" />, 'commission')}
 
         {/* Assign Contractor Modal */}
         {showAssignModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
-            <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full max-h-[80vh] overflow-y-auto">
+          <div className="modal-shell">
+            <div className="modal-card max-w-md">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Assign Contractor</h2>
 
               <div className="space-y-4">

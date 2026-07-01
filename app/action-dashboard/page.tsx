@@ -77,8 +77,8 @@ export default function ActionDashboard() {
         {/* Priority Actions */}
         <div className="grid md:grid-cols-4 gap-4">
           <div
-            onClick={() => router.push('/claims-queue')}
-            className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md cursor-pointer transition-all"
+            onClick={() => router.push('/claims-queue?filter=overdue')}
+            className="clickable-card"
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
@@ -91,8 +91,8 @@ export default function ActionDashboard() {
           </div>
 
           <div
-            onClick={() => router.push('/claims-queue')}
-            className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md cursor-pointer transition-all"
+            onClick={() => router.push('/claims-queue?filter=review')}
+            className="clickable-card"
           >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -104,7 +104,10 @@ export default function ActionDashboard() {
             <p className="text-xs text-slate-500 mt-2">Claims awaiting your review</p>
           </div>
 
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
+          <div
+            onClick={() => router.push('/claims-queue?filter=pending')}
+            className="clickable-card"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                 <Clock className="w-6 h-6 text-amber-600" />
@@ -115,7 +118,10 @@ export default function ActionDashboard() {
             <p className="text-xs text-slate-500 mt-2">Newly submitted claims</p>
           </div>
 
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
+          <div
+            onClick={() => router.push('/claims-queue?filter=approved')}
+            className="clickable-card"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="w-6 h-6 text-green-600" />

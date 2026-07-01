@@ -54,16 +54,16 @@ export function PremiumSelect({
           type="button"
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
-          className={`w-full min-h-11 px-4 py-2.5 border rounded-xl text-left flex items-center justify-between transition-all shadow-sm ${
+          className={`w-full min-h-11 border rounded-xl text-left grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-2.5 transition-all shadow-sm ${
             disabled
               ? 'bg-slate-50 border-slate-200 text-slate-500 cursor-not-allowed'
               : 'bg-white border-slate-300 hover:border-emerald-400 focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-[#14533b]'
           }`}
         >
-          <span className={selectedOption ? 'text-slate-950 font-medium truncate' : 'text-slate-600 truncate'}>
+          <span className={selectedOption ? 'min-w-0 text-slate-950 font-medium truncate' : 'min-w-0 text-slate-600 truncate'}>
             {selectedOption?.label || placeholder}
           </span>
-          <ChevronDown className={`w-4 h-4 text-[#14533b] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-4 h-4 shrink-0 text-[#14533b] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isOpen && (
@@ -72,9 +72,9 @@ export function PremiumSelect({
               type="button"
               aria-label="Close select menu"
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 z-40 bg-transparent sm:hidden"
+              className="fixed inset-0 z-40 bg-slate-950/20 backdrop-blur-[1px] sm:hidden"
             />
-            <div className="fixed left-4 right-4 bottom-4 z-50 max-h-[72vh] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.28)] sm:absolute sm:top-full sm:left-0 sm:right-0 sm:bottom-auto sm:mt-2 sm:max-h-none sm:rounded-xl sm:shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
+            <div className="fixed left-4 right-4 top-16 bottom-4 z-50 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.28)] sm:absolute sm:top-full sm:left-0 sm:right-0 sm:bottom-auto sm:mt-2 sm:max-h-none sm:rounded-xl sm:shadow-[0_18px_45px_rgba(15,23,42,0.16)]">
             {searchable && (
               <div className="p-3 border-b border-slate-200">
                 <div className="relative">

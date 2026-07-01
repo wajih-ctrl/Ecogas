@@ -14,6 +14,8 @@ import {
   Settings,
   User,
   Users,
+  ChevronLeft,
+  ChevronRight,
   X,
   Zap,
 } from 'lucide-react';
@@ -24,7 +26,17 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose?: () => void }) {
+export function Sidebar({
+  isOpen = false,
+  isCollapsed = false,
+  onClose,
+  onToggleCollapse,
+}: {
+  isOpen?: boolean;
+  isCollapsed?: boolean;
+  onClose?: () => void;
+  onToggleCollapse?: () => void;
+}) {
   const pathname = usePathname();
   const { currentRole } = useAppState();
 
@@ -67,19 +79,30 @@ export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose
   const isActive = (href: string) =>
     href === '/dashboard' ? pathname === '/dashboard' : pathname === href || pathname.startsWith(`${href}/`);
 
-  const renderContent = (showCloseButton: boolean) => (
+  const renderContent = (showCloseButton: boolean, collapsed = false) => (
     <>
-      <div className="px-4 py-4 border-b border-slate-200">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#1b5e3f] to-[#0d3a24] rounded-lg flex items-center justify-center flex-shrink-0">
-              <div className="text-white text-xs font-bold">CF</div>
+      <div className={`px-4 py-4 border-b border-slate-200 ${collapsed ? 'px-3' : ''}`}>
+        <div className={`flex gap-2 ${collapsed ? 'flex-col items-center' : 'items-center justify-between'}`}>
+          <div className={`flex min-w-0 items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
+            <div className="h-10 w-10 rounded-xl bg-[#14533b] p-1.5 shadow-sm flex-shrink-0">
+              <img src="/white-logo.png" alt="Ecogas" className="h-full w-full object-contain" />
             </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-slate-900 truncate">ClaimFlow</p>
-              <p className="text-xs text-slate-500 truncate">Ecogas Christchurch</p>
+            <div className={`min-w-0 ${collapsed ? 'hidden' : ''}`}>
+              <p className="text-sm font-semibold leading-tight text-slate-900 truncate">ClaimFlow</p>
+              <p className="text-xs leading-tight text-slate-500 truncate">Ecogas Christchurch</p>
             </div>
           </div>
+          {!showCloseButton && onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="p-2 rounded-lg text-slate-600 hover:bg-slate-100"
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </button>
+          )}
           {showCloseButton && (
             <button
               type="button"
@@ -99,19 +122,20 @@ export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose
             key={item.href}
             href={item.href}
             onClick={onClose}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+            title={collapsed ? item.label : undefined}
+            className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
               isActive(item.href)
                 ? 'bg-[#14533b] text-white shadow-sm'
                 : 'text-slate-700 hover:bg-slate-100 hover:text-slate-950'
             }`}
           >
             <span className="flex-shrink-0">{item.icon}</span>
-            <span className="truncate">{item.label}</span>
+            <span className={`truncate ${collapsed ? 'sr-only' : ''}`}>{item.label}</span>
           </Link>
         ))}
       </nav>
 
-      <div className="border-t border-slate-200 px-4 py-3">
+      <div className={`border-t border-slate-200 px-4 py-3 ${collapsed ? 'hidden' : ''}`}>
         <p className="text-xs text-slate-500 text-center">2026 Ecogas</p>
         <p className="text-xs text-slate-500 text-center">ClaimFlow v1.0</p>
       </div>
@@ -120,8 +144,8 @@ export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose
 
   return (
     <>
-      <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col h-screen sticky top-0 z-40">
-        {renderContent(false)}
+      <aside className={`${isCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-slate-200 hidden md:flex flex-col h-screen sticky top-0 z-40 transition-[width] duration-200`}>
+        {renderContent(false, isCollapsed)}
       </aside>
 
       {isOpen && (
@@ -133,7 +157,7 @@ export function Sidebar({ isOpen = false, onClose }: { isOpen?: boolean; onClose
             className="absolute inset-0 bg-slate-950/45 backdrop-blur-sm"
           />
           <aside className="absolute left-0 top-0 bottom-0 w-[82vw] max-w-80 bg-white border-r border-slate-200 shadow-2xl flex flex-col">
-            {renderContent(true)}
+            {renderContent(true, false)}
           </aside>
         </div>
       )}

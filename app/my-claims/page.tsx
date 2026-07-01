@@ -3,12 +3,26 @@
 import { AppLayout } from '@/components/app-layout';
 import { useAppState } from '@/lib/use-app-state';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function MyClaimsPage() {
   const router = useRouter();
   const { selectedContractor, claims } = useAppState();
+  const [filter, setFilter] = useState<string | null>(null);
+  const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null);
 
-  const myClaims = claims.filter(c => c.contractorName === selectedContractor);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setFilter(params.get('filter'));
+    setSelectedClaimId(params.get('selected'));
+  }, []);
+
+  let myClaims = claims.filter(c => c.contractorName === selectedContractor);
+
+  if (filter === 'approved') myClaims = myClaims.filter(c => c.status === 'Approved');
+  if (filter === 'awaiting') myClaims = myClaims.filter(c => ['Under Review', 'More Info Requested'].includes(c.status));
+  if (filter === 'submitted') myClaims = myClaims.filter(c => c.status === 'Submitted');
+  if (filter === 'overdue') myClaims = myClaims.filter(c => c.riskFlag === 'Overdue');
 
   const getStatusBadgeColor = (status: string) => {
     if (status === 'Approved') return 'bg-green-100 text-green-700';
@@ -42,7 +56,7 @@ export default function MyClaimsPage() {
               </thead>
               <tbody>
                 {myClaims.map(claim => (
-                  <tr key={claim.id} className="border-b border-slate-100 hover:bg-slate-50">
+                  <tr key={claim.id} className={`border-b border-slate-100 hover:bg-slate-50 ${selectedClaimId === claim.id ? 'bg-emerald-50' : ''}`}>
                     <td className="px-6 py-4 font-medium text-[#1b5e3f] cursor-pointer" onClick={() => router.push(`/claim-detail/${claim.id}`)}>
                       {claim.id}
                     </td>

@@ -2,7 +2,7 @@
 
 import { AppLayout } from '@/components/app-layout';
 import { useAppState } from '@/lib/use-app-state';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Claim, CommissionGap, TBCGap } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, Clock, Zap, CheckCircle, Search } from 'lucide-react';
@@ -20,6 +20,20 @@ export default function RiskStatusPage() {
   const [filterDeliveryPhase, setFilterDeliveryPhase] = useState<string | null>(null);
   const [filterRiskFlag, setFilterRiskFlag] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('deadline');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const risk = params.get('risk');
+    const status = params.get('status');
+    const section = params.get('section');
+    if (risk) setFilterRiskFlag(risk);
+    if (status) setFilterStatus(status);
+    if (section) {
+      window.setTimeout(() => {
+        document.getElementById(section)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }, []);
 
   // Calculate key metrics
   const openClaims = claims.filter(c => ['Submitted', 'Under Review', 'More Info Requested'].includes(c.status)).length;
@@ -44,7 +58,11 @@ export default function RiskStatusPage() {
     );
   }
   
-  if (filterStatus) filteredClaims = filteredClaims.filter(c => c.status === filterStatus);
+  if (filterStatus === 'open') {
+    filteredClaims = filteredClaims.filter(c => ['Submitted', 'Under Review', 'More Info Requested'].includes(c.status));
+  } else if (filterStatus) {
+    filteredClaims = filteredClaims.filter(c => c.status === filterStatus);
+  }
   if (filterRiskFlag) filteredClaims = filteredClaims.filter(c => c.riskFlag === filterRiskFlag);
   if (filterPackage) filteredClaims = filteredClaims.filter(c => c.packageId === filterPackage);
   if (filterResponsibility) filteredClaims = filteredClaims.filter(c => c.responsibilityCode === filterResponsibility);
@@ -86,6 +104,17 @@ export default function RiskStatusPage() {
     return <CheckCircle className="w-4 h-4" />;
   };
 
+  const applyClaimFilter = (filter: 'open' | 'overdue' | 'dueSoon' | 'approved' | 'value') => {
+    setFilterStatus(null);
+    setFilterRiskFlag(null);
+    if (filter === 'open') setFilterStatus('open');
+    if (filter === 'overdue') setFilterRiskFlag('Overdue');
+    if (filter === 'dueSoon') setFilterRiskFlag('Due Soon');
+    if (filter === 'approved') setFilterStatus('Approved');
+    if (filter === 'value') setSortBy('value');
+    document.getElementById('claims-risk-table')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <AppLayout>
       <div className="p-8 space-y-8">
@@ -96,41 +125,41 @@ export default function RiskStatusPage() {
 
         {/* Top Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <button type="button" onClick={() => applyClaimFilter('open')} className="clickable-card">
             <p className="text-xs text-slate-500 mb-2">Total Open Claims</p>
             <p className="text-2xl font-bold text-slate-900">{openClaims}</p>
-          </div>
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          </button>
+          <button type="button" onClick={() => applyClaimFilter('value')} className="clickable-card">
             <p className="text-xs text-slate-500 mb-2">Total Value at Risk</p>
             <p className="text-2xl font-bold text-amber-600">${(totalValueAtRisk / 1000).toFixed(0)}k</p>
-          </div>
-          <div className="bg-white rounded-lg border border-red-200 p-4">
+          </button>
+          <button type="button" onClick={() => applyClaimFilter('overdue')} className="clickable-card border-red-200">
             <p className="text-xs text-slate-500 mb-2">Overdue Items</p>
             <p className="text-2xl font-bold text-red-600">{overdueItems}</p>
-          </div>
-          <div className="bg-white rounded-lg border border-amber-200 p-4">
+          </button>
+          <button type="button" onClick={() => applyClaimFilter('dueSoon')} className="clickable-card border-amber-200">
             <p className="text-xs text-slate-500 mb-2">Due Within 7 Days</p>
             <p className="text-2xl font-bold text-amber-600">{dueSoon}</p>
-          </div>
+          </button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg border border-slate-200 p-4">
+          <button type="button" onClick={() => router.push('/tbc-risks?section=standard')} className="clickable-card">
             <p className="text-xs text-slate-500 mb-2">Unassigned TBC Contracts</p>
             <p className="text-2xl font-bold text-slate-900">{unassignedTBC}</p>
-          </div>
-          <div className="bg-white rounded-lg border border-orange-200 p-4">
+          </button>
+          <button type="button" onClick={() => router.push('/tbc-risks?section=urgent')} className="clickable-card border-orange-200">
             <p className="text-xs text-slate-500 mb-2">Gap/TBC Urgent Flags</p>
             <p className="text-2xl font-bold text-orange-600">{urgentGaps}</p>
-          </div>
-          <div className="bg-white rounded-lg border border-purple-200 p-4">
+          </button>
+          <button type="button" onClick={() => router.push('/tbc-risks?section=commission')} className="clickable-card border-purple-200">
             <p className="text-xs text-slate-500 mb-2">Commission Gaps</p>
             <p className="text-2xl font-bold text-purple-600">{commissionGapsCount}</p>
-          </div>
-          <div className="bg-white rounded-lg border border-red-200 p-4">
+          </button>
+          <button type="button" onClick={() => router.push('/tbc-risks?section=cfo')} className="clickable-card border-red-200">
             <p className="text-xs text-slate-500 mb-2">Pre-processing CFO Items</p>
             <p className="text-2xl font-bold text-red-600">{cfoItems.length}</p>
-          </div>
+          </button>
         </div>
 
         {/* Executive Risk Snapshot */}
@@ -145,7 +174,7 @@ export default function RiskStatusPage() {
               {overdueItems > 0 ? `${overdueItems} item(s) require immediate attention` : 'All items on schedule'}
             </p>
             {overdueItems > 0 && (
-              <button onClick={() => setFilterRiskFlag('Overdue')} className="text-red-600 hover:text-red-700 font-medium text-sm">
+              <button onClick={() => applyClaimFilter('overdue')} className="text-red-600 hover:text-red-700 font-medium text-sm">
                 View overdue →
               </button>
             )}
@@ -161,7 +190,7 @@ export default function RiskStatusPage() {
               {dueSoon > 0 ? `${dueSoon} item(s) due within 7 days` : 'No items due soon'}
             </p>
             {dueSoon > 0 && (
-              <button onClick={() => setFilterRiskFlag('Due Soon')} className="text-amber-600 hover:text-amber-700 font-medium text-sm">
+              <button onClick={() => applyClaimFilter('dueSoon')} className="text-amber-600 hover:text-amber-700 font-medium text-sm">
                 View upcoming →
               </button>
             )}
@@ -201,7 +230,7 @@ export default function RiskStatusPage() {
         </div>
 
         {/* All Claims and Variations Table */}
-        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+        <div id="claims-risk-table" className="bg-white rounded-lg border border-slate-200 overflow-hidden scroll-mt-24">
           <div className="p-6 border-b border-slate-200">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-slate-900">All Claims & Variations</h2>

@@ -42,22 +42,22 @@ export function MetricCard({
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={`w-full p-5 rounded-2xl border text-left transition-all shadow-[0_10px_30px_rgba(15,23,42,0.045)] ${variantStyles[variant]} ${
-        onClick ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(15,23,42,0.08)] hover:border-emerald-300' : 'cursor-default'
+      className={`group w-full min-h-40 p-6 rounded-2xl border text-left transition-all shadow-[0_10px_30px_rgba(15,23,42,0.045)] ${variantStyles[variant]} ${
+        onClick ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(15,23,42,0.08)] hover:border-emerald-300 focus:outline-none focus:ring-4 focus:ring-emerald-100' : 'cursor-default'
       }`}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 text-left">
-          <p className="text-xs font-bold uppercase tracking-[0.08em] text-slate-500 mb-2">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.08em] text-slate-500 mb-3">{label}</p>
           <p className="text-3xl font-bold text-slate-950 mb-2">{value}</p>
           {trend && (
             <p className={`text-xs font-semibold ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
               {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}% this month
             </p>
           )}
-          {helpText && <p className="text-xs text-slate-600 mt-2 leading-relaxed">{helpText}</p>}
+          {helpText && <p className="text-sm text-slate-600 mt-3 leading-6">{helpText}</p>}
         </div>
-        <div className={`p-3 rounded-xl ${iconBgStyles[variant]}`}>
+        <div className={`p-3 rounded-xl transition-transform ${iconBgStyles[variant]} ${onClick ? 'group-hover:scale-105' : ''}`}>
           <Icon className="w-6 h-6" />
         </div>
       </div>

@@ -107,8 +107,8 @@ export default function SettingsPage() {
 
       {/* Modals */}
       {activeModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-          <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md max-h-[80vh] overflow-y-auto">
+        <div className="modal-shell">
+          <div className="modal-card max-w-md">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-900">
                 {activeModal === 'notifications' && 'Notification Preferences'}
@@ -127,18 +127,18 @@ export default function SettingsPage() {
             <div className="space-y-4 mb-6">
               {activeModal === 'notifications' && (
                 <>
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                  <label className="p-3 bg-slate-50 rounded-lg cursor-pointer">
                     <input type="checkbox" defaultChecked className="w-4 h-4" />
-                    <label className="text-sm text-slate-900">Email notifications for claims</label>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span className="text-sm text-slate-900">Email notifications for claims</span>
+                  </label>
+                  <label className="p-3 bg-slate-50 rounded-lg cursor-pointer">
                     <input type="checkbox" defaultChecked className="w-4 h-4" />
-                    <label className="text-sm text-slate-900">SMS alerts for overdue items</label>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                    <span className="text-sm text-slate-900">SMS alerts for overdue items</span>
+                  </label>
+                  <label className="p-3 bg-slate-50 rounded-lg cursor-pointer">
                     <input type="checkbox" className="w-4 h-4" />
-                    <label className="text-sm text-slate-900">Daily summary digest</label>
-                  </div>
+                    <span className="text-sm text-slate-900">Daily summary digest</span>
+                  </label>
                 </>
               )}
 

@@ -205,25 +205,27 @@ export default function PackagesPage() {
                             <span className="px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700">Assigned</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 flex gap-2">
-                          <button
-                            onClick={() => { setSelectedJobCode(code.code); setModalOpen('contractor'); }}
-                            className="px-2 py-1 text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 rounded transition-colors"
-                          >
-                            Assign
-                          </button>
-                          <button
-                            onClick={() => { setSelectedJobCode(code.code); setModalOpen('value'); }}
-                            className="px-2 py-1 text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 rounded transition-colors"
-                          >
-                            Value
-                          </button>
-                          <button
-                            onClick={() => { setSelectedJobCode(code.code); setModalOpen('tbc'); }}
-                            className="px-2 py-1 text-xs bg-orange-100 text-orange-700 hover:bg-orange-200 rounded transition-colors"
-                          >
-                            Flag TBC
-                          </button>
+                        <td className="px-6 py-4">
+                          <div className="table-actions">
+                            <button
+                              onClick={() => { setSelectedJobCode(code.code); setModalOpen('contractor'); }}
+                              className="bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                            >
+                              Assign
+                            </button>
+                            <button
+                              onClick={() => { setSelectedJobCode(code.code); setModalOpen('value'); }}
+                              className="bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                            >
+                              Value
+                            </button>
+                            <button
+                              onClick={() => { setSelectedJobCode(code.code); setModalOpen('tbc'); }}
+                              className="bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors"
+                            >
+                              Flag TBC
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     )})}
@@ -356,8 +358,8 @@ export default function PackagesPage() {
         </div>
         {/* Modals */}
         {modalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-            <div className="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md max-h-[80vh] overflow-y-auto">
+          <div className="modal-shell">
+            <div className="modal-card max-w-md">
               {/* Assign Contractor Modal */}
               {modalOpen === 'contractor' && (
                 <>

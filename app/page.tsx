@@ -68,7 +68,7 @@ export default function LoginPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#071710] text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#071710] text-white relative overflow-x-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.045)_1px,transparent_1px)] bg-[size:48px_48px]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(20,83,59,0.48),transparent_36%),radial-gradient(circle_at_88%_12%,rgba(15,118,110,0.22),transparent_30%)]" />
 
@@ -80,8 +80,8 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-8 flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-white text-[#14533b] flex items-center justify-center font-black shadow-2xl">
-              CF
+            <div className="h-14 w-14 rounded-2xl bg-white/10 p-2 ring-1 ring-white/15 shadow-2xl">
+              <img src="/white-logo.png" alt="Ecogas" className="h-full w-full object-contain" />
             </div>
             <div>
               <p className="text-sm font-semibold text-emerald-100">ClaimFlow</p>
@@ -89,9 +89,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <h1 className="mt-10 text-5xl md:text-7xl font-bold tracking-tight leading-[0.95]">
+          <h1 className="mt-10 text-5xl md:text-7xl font-bold tracking-tight leading-[1.08]">
             ClaimFlow
-            <span className="block text-emerald-100">Ecogas Christchurch Project Control Portal</span>
+            <span className="block pt-2 text-emerald-100">Ecogas Christchurch Project Control Portal</span>
           </h1>
           <p className="mt-6 text-lg md:text-xl leading-8 text-slate-200 max-w-xl">
             One source of truth for contractor claims, variations, RFIs, design changes, deadlines, TBC risks, and NZD value at risk.

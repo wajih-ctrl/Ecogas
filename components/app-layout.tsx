@@ -10,6 +10,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { currentRole } = useAppState();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     if (!currentRole) {
@@ -29,10 +30,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-slate-50">
-      <Header onOpenSidebar={() => setSidebarOpen(true)} />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className="flex h-screen bg-slate-50">
+      <Sidebar
+        isOpen={sidebarOpen}
+        isCollapsed={sidebarCollapsed}
+        onClose={() => setSidebarOpen(false)}
+        onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
+      />
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <Header onOpenSidebar={() => setSidebarOpen(true)} />
         <main className="min-w-0 flex-1 overflow-y-auto">
           {children}
         </main>

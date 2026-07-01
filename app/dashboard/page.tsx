@@ -39,7 +39,9 @@ export default function AdminDashboard() {
   const cfoItems = tbcGaps.filter(g => g.jobCode.includes('CFO')).length;
 
   const handleCardClick = (type: string) => {
-    if (type === 'openClaims') {
+    if (type === 'totalContracts' || type === 'confirmedContractors') {
+      router.push('/users');
+    } else if (type === 'openClaims') {
       router.push('/claims?filter=open');
     } else if (type === 'valueAtRisk') {
       router.push('/risk-status');
@@ -55,6 +57,10 @@ export default function AdminDashboard() {
       router.push('/tbc-risks?section=urgent');
     } else if (type === 'standardTBC') {
       router.push('/tbc-risks?section=standard');
+    } else if (type === 'approved') {
+      router.push('/claims?filter=Approved');
+    } else if (type === 'rejected') {
+      router.push('/claims?filter=Rejected');
     }
   };
 
@@ -140,6 +146,7 @@ export default function AdminDashboard() {
             value={totalContracts}
             icon={Users}
             variant="info"
+            onClick={() => handleCardClick('totalContracts')}
             helpText="Across all 6 Ecogas packages"
           />
           <MetricCard
@@ -147,6 +154,7 @@ export default function AdminDashboard() {
             value={confirmedContractors}
             icon={CheckCircle}
             variant="success"
+            onClick={() => handleCardClick('confirmedContractors')}
             helpText={`${confirmedContractors}/${totalContracts} registered`}
           />
           <MetricCard
@@ -210,53 +218,33 @@ export default function AdminDashboard() {
             value={approvedThisMonth}
             icon={CheckCircle}
             variant="success"
+            onClick={() => handleCardClick('approved')}
             helpText="Recent approvals"
           />
-          <div className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-slate-600 mb-2 font-medium">Approved This Month</p>
-                <p className="text-3xl font-bold text-green-700">{approvedThisMonth}</p>
-              </div>
-              <CheckCircle className="w-8 h-8 text-green-600 flex-shrink-0" />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-slate-600 mb-2 font-medium">Rejected This Month</p>
-                <p className="text-3xl font-bold text-red-700">{rejectedThisMonth}</p>
-              </div>
-              <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
-            </div>
-          </div>
-
-          <div
+          <MetricCard
+            label="Rejected This Month"
+            value={rejectedThisMonth}
+            icon={XCircle}
+            variant="danger"
+            onClick={() => handleCardClick('rejected')}
+            helpText="Recently rejected records"
+          />
+          <MetricCard
+            label="Gap/TBC Urgent"
+            value={urgentTBC}
+            icon={AlertCircle}
+            variant="danger"
             onClick={() => handleCardClick('urgentTBC')}
-            className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all cursor-pointer"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-slate-600 mb-2 font-medium">Gap/TBC Urgent</p>
-                <p className="text-3xl font-bold text-slate-900">{urgentTBC}</p>
-              </div>
-              <AlertCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
-            </div>
-          </div>
-
-          <div
+            helpText="Unassigned urgent gap records"
+          />
+          <MetricCard
+            label="Gap/TBC Standard"
+            value={gapTbcStandard}
+            icon={Target}
+            variant="default"
             onClick={() => handleCardClick('standardTBC')}
-            className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all cursor-pointer"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-slate-600 mb-2 font-medium">Gap/TBC Standard</p>
-                <p className="text-3xl font-bold text-slate-900">{gapTbcStandard}</p>
-              </div>
-              <Target className="w-8 h-8 text-slate-600 flex-shrink-0" />
-            </div>
-          </div>
+            helpText="Standard priority gap records"
+          />
         </div>
 
         <div className="premium-panel p-5 space-y-4">

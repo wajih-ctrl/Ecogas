@@ -3,12 +3,23 @@
 import { AppLayout } from '@/components/app-layout';
 import { useAppState } from '@/lib/use-app-state';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function ClaimsQueuePage() {
   const router = useRouter();
   const { claims } = useAppState();
+  const [filter, setFilter] = useState<string | null>(null);
 
-  const queuedClaims = claims.filter(c => ['Submitted', 'Under Review', 'More Info Requested'].includes(c.status));
+  useEffect(() => {
+    setFilter(new URLSearchParams(window.location.search).get('filter'));
+  }, []);
+
+  let queuedClaims = claims.filter(c => ['Submitted', 'Under Review', 'More Info Requested'].includes(c.status));
+
+  if (filter === 'overdue') queuedClaims = claims.filter(c => c.riskFlag === 'Overdue');
+  if (filter === 'review') queuedClaims = claims.filter(c => ['Under Review', 'More Info Requested'].includes(c.status));
+  if (filter === 'pending') queuedClaims = claims.filter(c => c.status === 'Submitted');
+  if (filter === 'approved') queuedClaims = claims.filter(c => c.status === 'Approved');
 
   const getStatusBadgeColor = (status: string) => {
     if (status === 'Under Review') return 'bg-blue-100 text-blue-700';

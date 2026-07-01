@@ -321,8 +321,8 @@ export default function ClaimDetailPage() {
 
         {/* Status Change Modal */}
         {showStatusModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+          <div className="modal-shell">
+            <div className="modal-card max-w-md">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Update Claim Status</h2>
               <div className="space-y-4">
                 <div>

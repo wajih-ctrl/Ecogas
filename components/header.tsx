@@ -1,22 +1,17 @@
 'use client';
 
 import { useAppState } from '@/lib/use-app-state';
-import { useRouter } from 'next/navigation';
-import { LogOut, Bell, User as UserIcon, Search, X, Menu } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Bell, User as UserIcon, X, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 export function Header({ onOpenSidebar }: { onOpenSidebar?: () => void }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { currentUser, currentRole, selectedContractor, logout } = useAppState();
-  const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
 
   const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
-
-  const handleRoleSwitch = () => {
     logout();
     router.push('/');
   };
@@ -28,11 +23,33 @@ export function Header({ onOpenSidebar }: { onOpenSidebar?: () => void }) {
     return '';
   };
 
+  const pageTitleMap: Record<string, string> = {
+    '/dashboard': 'Admin Dashboard',
+    '/risk-status': 'Risk & Status',
+    '/packages': 'Project Packages',
+    '/claims': 'Claims & Variations',
+    '/tbc-risks': 'TBC Risk View',
+    '/users': 'Users',
+    '/activity': 'Activity Log',
+    '/settings': 'Settings',
+    '/action-dashboard': 'Action Dashboard',
+    '/claims-queue': 'Claims Queue',
+    '/my-dashboard': 'My Dashboard',
+    '/my-claims': 'My Claims',
+    '/submit-claim': 'Submit Claim',
+    '/notifications': 'Notifications',
+    '/profile': 'Profile',
+  };
+
+  const pageTitle =
+    pathname.startsWith('/claim-detail')
+      ? 'Claim Detail'
+      : pageTitleMap[pathname] || 'Project Control';
+
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-      <div className="flex items-center justify-between px-6 py-4 max-w-full">
-        {/* Left: Logo & Project */}
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6 max-w-full">
+        <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
             onClick={onOpenSidebar}
@@ -41,31 +58,14 @@ export function Header({ onOpenSidebar }: { onOpenSidebar?: () => void }) {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="w-10 h-10 bg-gradient-to-br from-[#1b5e3f] to-[#0d3a24] rounded-lg flex items-center justify-center">
-            <div className="text-white text-sm font-bold">CF</div>
-          </div>
-          <div className="hidden sm:block">
-            <h1 className="text-sm font-semibold text-slate-900">ClaimFlow</h1>
-            <p className="text-xs text-slate-500">Ecogas Christchurch</p>
-          </div>
-        </div>
-
-        {/* Center: Search */}
-        <div className="hidden md:flex flex-1 max-w-md mx-4">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search claims, packages..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1b5e3f]"
-            />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-bold text-slate-950">{pageTitle}</p>
+            <p className="hidden truncate text-xs text-slate-500 sm:block">Ecogas Christchurch project controls</p>
           </div>
         </div>
 
         {/* Right: Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="ml-auto flex items-center gap-2 sm:gap-3">
           {/* Role Badge */}
           <div className="hidden sm:flex items-center gap-3 px-3 py-2 bg-slate-50 rounded-lg border border-slate-200">
             <UserIcon className="w-4 h-4 text-slate-600" />
@@ -114,21 +114,12 @@ export function Header({ onOpenSidebar }: { onOpenSidebar?: () => void }) {
             )}
           </div>
 
-          {/* Role Switch */}
-          <button
-            onClick={handleRoleSwitch}
-            className="hidden sm:inline-flex px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors border border-slate-200"
-          >
-            Switch Role
-          </button>
-
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="p-2 hover:bg-red-50 rounded-lg transition-colors text-red-600"
-            title="Logout"
+            className="inline-flex items-center justify-center rounded-xl border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-50"
           >
-            <LogOut className="w-5 h-5" />
+            Logout
           </button>
         </div>
       </div>
