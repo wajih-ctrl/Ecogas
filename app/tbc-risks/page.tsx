@@ -25,7 +25,13 @@ export default function TBCRisksPage() {
     if (selectedGapId && selectedContractor) {
       const gap = tbcGaps.find(g => g.id === selectedGapId);
       if (gap) {
-        updateTBCGap(selectedGapId, { supplyContractor: selectedContractor });
+        const updates = gap.jobCode.includes('-C')
+          ? { commissionContractor: selectedContractor }
+          : gap.jobCode.includes('CFO')
+            ? { supplyContractor: selectedContractor, commissionContractor: selectedContractor }
+            : { supplyContractor: selectedContractor };
+
+        updateTBCGap(selectedGapId, updates);
         setShowAssignModal(false);
         setSelectedGapId(null);
         setSelectedContractor('');
@@ -37,10 +43,10 @@ export default function TBCRisksPage() {
   const preProcessingCFO = tbcGaps.filter(g => g.jobCode.includes('CFO'));
   
   // Section 2: Gap/TBC Urgent (unconfirmed contractor, urgent)
-  const gapTbcUrgent = tbcGaps.filter(g => !g.jobCode.includes('CFO') && !g.jobCode.includes('-C') && g.riskLevel === 'Urgent');
+  const gapTbcUrgent = tbcGaps.filter(g => !g.jobCode.includes('CFO') && !g.jobCode.includes('-C') && !g.supplyContractor && g.riskLevel === 'Urgent');
   
   // Section 3: Gap/TBC Standard (unconfirmed contractor, not urgent)
-  const gapTbcStandard = tbcGaps.filter(g => !g.jobCode.includes('CFO') && !g.jobCode.includes('-C') && g.riskLevel === 'Standard');
+  const gapTbcStandard = tbcGaps.filter(g => !g.jobCode.includes('CFO') && !g.jobCode.includes('-C') && !g.supplyContractor && g.riskLevel === 'Standard');
   
   // Section 4: Commission-phase TBC (supply confirmed, commission contractor TBC)
   const commissionPhaseTBC = tbcGaps.filter(g => g.jobCode.includes('-C') && !g.commissionContractor);
@@ -64,41 +70,41 @@ export default function TBCRisksPage() {
         <p className="text-sm text-slate-700 ml-9">Contractor assignment required</p>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="tbc-risk-table w-full text-sm">
           <thead className={`${headerColor} border-b`}>
             <tr>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Package</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Resp.</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Job Code</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Scope</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Phase(s)</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Supply Contractor</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Commission Contractor</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Gap Type</th>
-              <th className="px-6 py-3 text-left font-semibold text-slate-900">Action</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Package</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Resp.</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Job Code</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Scope</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Phase(s)</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900"><span className="block leading-tight">Supply<br />Contractor</span></th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900"><span className="block leading-tight">Commission<br />Contractor</span></th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Gap Type</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-900">Action</th>
             </tr>
           </thead>
           <tbody>
             {gaps.map((gap) => (
               <tr key={gap.id} className="border-b border-slate-100 hover:bg-white bg-slate-50">
-                <td className="px-6 py-4 font-medium text-slate-900">{gap.packageId}</td>
-                <td className="px-6 py-4 text-slate-600">{getResponsibilityCode(gap.packageId)}</td>
-                <td className="px-6 py-4 text-slate-600">{gap.jobCode}</td>
-                <td className="px-6 py-4 text-slate-700">{gap.scope}</td>
-                <td className="px-6 py-4 text-slate-600">{gap.deliveryPhase}</td>
-                <td className="px-6 py-4 text-slate-600">{gap.supplyContractor || <span className="text-red-600 font-semibold">Unassigned</span>}</td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-4 font-medium text-slate-900">{gap.packageId}</td>
+                <td className="px-4 py-4 text-slate-600">{getResponsibilityCode(gap.packageId)}</td>
+                <td className="px-4 py-4 text-slate-600">{gap.jobCode}</td>
+                <td className="px-4 py-4 text-slate-700">{gap.scope}</td>
+                <td className="px-4 py-4 text-slate-600">{gap.deliveryPhase}</td>
+                <td className="px-4 py-4 text-slate-600">{gap.supplyContractor || <span className="text-red-600 font-semibold">Unassigned</span>}</td>
+                <td className="px-4 py-4">
                   <span className={gap.commissionContractor ? 'text-slate-600' : 'text-purple-600 font-semibold'}>
                     {gap.commissionContractor || 'TBC'}
                   </span>
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-4">
                   <span className={`px-2 py-1 rounded text-xs font-semibold ${gap.riskLevel === 'Urgent' ? 'bg-red-200 text-red-700' : 'bg-slate-300 text-slate-700'}`}>
                     {getGapType(gap)}
                   </span>
                 </td>
-                <td className="px-6 py-4">
-                  {!gap.supplyContractor && (
+                <td className="px-4 py-4">
+                  {(!gap.supplyContractor || (gap.jobCode.includes('-C') && !gap.commissionContractor)) && (
                     <button
                       onClick={() => {
                         setSelectedGapId(gap.id);

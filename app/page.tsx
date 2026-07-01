@@ -108,21 +108,21 @@ export default function LoginPage() {
         </section>
 
         <section className="w-full">
-          <div className="rounded-3xl border border-white/15 bg-white/[0.96] p-3 shadow-[0_30px_90px_rgba(0,0,0,0.38)]">
-            <div className="p-5 md:p-7 border-b border-slate-200">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#14533b]">Select portal view</p>
-              <h2 className="mt-2 text-2xl font-bold text-slate-950">Continue as</h2>
+          <div className="portal-panel rounded-3xl border border-white/15 bg-[#101b16]/95 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.38)] backdrop-blur">
+            <div className="p-5 md:p-7 border-b border-white/10">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-emerald-200">Select portal view</p>
+              <h2 className="mt-2 text-2xl font-bold text-white">Continue as</h2>
             </div>
 
             <div className="grid gap-4 p-5 md:p-7">
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-emerald-200 hover:shadow-lg transition-all">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm hover:border-emerald-300/60 hover:bg-white/8 hover:shadow-lg transition-all">
                 <div className="flex gap-4">
-                  <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-[#14533b]" />
+                  <div className="w-11 h-11 bg-emerald-400/15 rounded-xl flex items-center justify-center">
+                    <Shield className="w-5 h-5 text-emerald-200" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-950">Ecogas Admin</h3>
-                    <p className="text-slate-600 text-sm mt-1">CTO / Program Manager full project visibility</p>
+                    <h3 className="text-lg font-bold text-white">Ecogas Admin</h3>
+                    <p className="text-slate-300 text-sm mt-1">CTO / Program Manager full project visibility</p>
                   </div>
                 </div>
                 <button onClick={handleAdminLogin} className="mt-5 w-full premium-button-primary">
@@ -131,30 +131,30 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-amber-200 hover:shadow-lg transition-all">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm hover:border-amber-300/70 hover:bg-white/8 hover:shadow-lg transition-all">
                 <div className="flex gap-4">
-                  <div className="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center">
-                    <Clipboard className="w-5 h-5 text-amber-700" />
+                  <div className="w-11 h-11 bg-amber-400/15 rounded-xl flex items-center justify-center">
+                    <Clipboard className="w-5 h-5 text-amber-200" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-950">Construction Manager</h3>
-                    <p className="text-slate-600 text-sm mt-1">Day-to-day claims, deadlines, and contractor response queue</p>
+                    <h3 className="text-lg font-bold text-white">Construction Manager</h3>
+                    <p className="text-slate-300 text-sm mt-1">Day-to-day claims, deadlines, and contractor response queue</p>
                   </div>
                 </div>
-                <button onClick={handleConstructionManagerLogin} className="mt-5 w-full premium-button-secondary border-amber-200 text-amber-800 hover:bg-amber-50">
+                <button onClick={handleConstructionManagerLogin} className="portal-manager-button mt-5 w-full premium-button border shadow-[0_12px_28px_rgba(252,211,77,0.18)]">
                   Enter Construction Manager View
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-sky-200 hover:shadow-lg transition-all">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm hover:border-sky-300/60 hover:bg-white/8 hover:shadow-lg transition-all">
                 <div className="flex gap-4">
-                  <div className="w-11 h-11 bg-sky-50 rounded-xl flex items-center justify-center">
-                    <Wrench className="w-5 h-5 text-sky-700" />
+                  <div className="w-11 h-11 bg-sky-400/15 rounded-xl flex items-center justify-center">
+                    <Wrench className="w-5 h-5 text-sky-200" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-slate-950">Contractor / Supplier</h3>
-                    <p className="text-slate-600 text-sm mt-1">Submit and track claims for assigned packages only</p>
+                    <h3 className="text-lg font-bold text-white">Contractor / Supplier</h3>
+                    <p className="text-slate-300 text-sm mt-1">Submit and track claims for assigned packages only</p>
                   </div>
                 </div>
                 <div className="space-y-3 mt-5">
@@ -163,7 +163,7 @@ export default function LoginPage() {
                     onChange={setSelectedContractor}
                     options={contractors.map(c => ({ value: c, label: c }))}
                     placeholder="Select contractor..."
-                    className="text-slate-950"
+                    className="text-white"
                   />
                   <button
                     onClick={handleContractorLogin}

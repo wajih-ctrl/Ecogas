@@ -3,7 +3,7 @@
 import { AppLayout } from '@/components/app-layout';
 import { useAppState } from '@/lib/use-app-state';
 import { useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { RotateCcw, Search } from 'lucide-react';
 
 export default function ActivityPage() {
   const { claims } = useAppState();
@@ -38,6 +38,14 @@ export default function ActivityPage() {
   const uniqueUsers = Array.from(new Set(allEvents.map(e => e.user)));
   const uniqueActions = Array.from(new Set(allEvents.map(e => e.action)));
   const uniquePackages = Array.from(new Set(allEvents.map(e => e.packageId)));
+  const hasFilters = Boolean(filterUser || filterAction || filterPackage || searchClaim);
+
+  const resetFilters = () => {
+    setFilterUser('');
+    setFilterAction('');
+    setFilterPackage('');
+    setSearchClaim('');
+  };
 
   return (
     <AppLayout>
@@ -48,8 +56,23 @@ export default function ActivityPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg border border-slate-200 p-4 space-y-4 overflow-visible">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-900">Filters</p>
+              <p className="text-xs text-slate-500">Narrow the audit trail by claim, user, action, or package.</p>
+            </div>
+            <button
+              type="button"
+              onClick={resetFilters}
+              disabled={!hasFilters}
+              className="premium-button-secondary w-full md:w-auto disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset Filters
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 overflow-visible">
             {/* Search */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-2">Search Claim ID</label>

@@ -295,10 +295,10 @@ export default function UsersPage() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-slate-700 mb-2">Assigned Packages</p>
-                          <div className="space-y-1">
+                          <div className="grid grid-cols-2 gap-2">
                             {user.assignedPackages && user.assignedPackages.length > 0 ? (
                               user.assignedPackages.map(pkg => (
-                                <div key={pkg} className="px-3 py-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-900">
+                                <div key={pkg} className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-900">
                                   {pkg}
                                 </div>
                               ))

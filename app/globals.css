@@ -4,9 +4,81 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-100.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-200.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-300.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-600.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-700.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-800.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Outfit';
+  src: url('/fonts/outfit-900.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme inline {
-  --font-heading: var(--font-outfit);
-  --font-sans: var(--font-outfit), 'Outfit Fallback';
+  --font-heading: 'Outfit';
+  --font-sans: 'Outfit';
   --font-mono: 'Monaco', 'Courier New', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -48,7 +120,338 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Accessibility and contrast refinements for repeated dashboard patterns. */
+table.tbc-risk-table,
+table.tbc-risk-table:has(th:nth-child(9)),
+.tbc-risk-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.tbc-risk-table {
+  min-width: 100% !important;
+  table-layout: fixed;
+}
+
+.tbc-risk-table th,
+.tbc-risk-table td {
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tbc-risk-table th span,
+.tbc-risk-table td span[class*='rounded'] {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.tbc-risk-table th:nth-child(1),
+.tbc-risk-table td:nth-child(1) {
+  width: 7%;
+}
+
+.tbc-risk-table th:nth-child(2),
+.tbc-risk-table td:nth-child(2) {
+  width: 7%;
+}
+
+.tbc-risk-table th:nth-child(3),
+.tbc-risk-table td:nth-child(3) {
+  width: 8%;
+}
+
+.tbc-risk-table th:nth-child(4),
+.tbc-risk-table td:nth-child(4) {
+  width: 18%;
+}
+
+.tbc-risk-table th:nth-child(5),
+.tbc-risk-table td:nth-child(5) {
+  width: 12%;
+}
+
+.tbc-risk-table th:nth-child(6),
+.tbc-risk-table td:nth-child(6),
+.tbc-risk-table th:nth-child(7),
+.tbc-risk-table td:nth-child(7) {
+  width: 13%;
+}
+
+.tbc-risk-table th:nth-child(8),
+.tbc-risk-table td:nth-child(8) {
+  width: 13%;
+}
+
+.tbc-risk-table th:nth-child(9),
+.tbc-risk-table td:nth-child(9) {
+  width: 9%;
+}
+
+.portal-manager-button {
+  background-color: #fcd34d !important;
+  border-color: #fcd34d !important;
+  color: #0f172a !important;
+}
+
+.portal-manager-button:hover {
+  background-color: #fde68a !important;
+  border-color: #fde68a !important;
+  color: #0f172a !important;
+}
+
+.login-panel,
+.login-panel .bg-white {
+  background-color: #ffffff !important;
+}
+
+.login-panel [class*='bg-white/'] {
+  background-color: rgb(255 255 255 / 0.96) !important;
+}
+
+.login-panel .text-slate-950,
+.login-panel .text-slate-900,
+.login-panel .text-slate-800,
+.login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+.login-panel .text-slate-600,
+.login-panel .text-slate-500,
+.login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+.login-panel [class*='text-[#14533b]'],
+.login-panel [class*='text-[#1b5e3f]'] {
+  color: #14533b !important;
+}
+
+.login-panel .premium-button-secondary {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
+}
+
+.login-panel input {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.dark .premium-link,
+.dark a[class*='text-[#14533b]'],
+.dark a[class*='text-[#1b5e3f]'],
+.dark button[class*='text-[#14533b]'],
+.dark button[class*='text-[#1b5e3f]'],
+.dark [class*='text-[#14533b]'],
+.dark [class*='text-[#1b5e3f]'] {
+  color: #86efac !important;
+}
+
+.dark .premium-link:hover,
+.dark a[class*='hover:text-[#0d3a24]']:hover,
+.dark a[class*='hover:text-[#0f3f2d]']:hover,
+.dark button[class*='hover:text-[#0d3a24]']:hover,
+.dark button[class*='hover:text-[#0f3f2d]']:hover {
+  color: #bbf7d0 !important;
+}
+
+.dark .bg-slate-200,
+.dark .bg-slate-300 {
+  background-color: #334139 !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-700,
+.dark .text-violet-600,
+.dark .text-violet-700 {
+  color: #d8b4fe !important;
+}
+
+.dark td button:not([class*='bg-']),
+.dark td a,
+.dark .table-actions button:not([class*='bg-']) {
+  color: #86efac !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .premium-link,
+  :root:not(.light) a[class*='text-[#14533b]'],
+  :root:not(.light) a[class*='text-[#1b5e3f]'],
+  :root:not(.light) button[class*='text-[#14533b]'],
+  :root:not(.light) button[class*='text-[#1b5e3f]'],
+  :root:not(.light) [class*='text-[#14533b]'],
+  :root:not(.light) [class*='text-[#1b5e3f]'] {
+    color: #86efac !important;
+  }
+
+  :root:not(.light) .premium-link:hover,
+  :root:not(.light) a[class*='hover:text-[#0d3a24]']:hover,
+  :root:not(.light) a[class*='hover:text-[#0f3f2d]']:hover,
+  :root:not(.light) button[class*='hover:text-[#0d3a24]']:hover,
+  :root:not(.light) button[class*='hover:text-[#0f3f2d]']:hover {
+    color: #bbf7d0 !important;
+  }
+
+  :root:not(.light) .bg-slate-200,
+  :root:not(.light) .bg-slate-300 {
+    background-color: #334139 !important;
+  }
+
+  :root:not(.light) .text-purple-600,
+  :root:not(.light) .text-purple-700,
+  :root:not(.light) .text-violet-600,
+  :root:not(.light) .text-violet-700 {
+    color: #d8b4fe !important;
+  }
+
+  :root:not(.light) td button:not([class*='bg-']),
+  :root:not(.light) td a,
+  :root:not(.light) .table-actions button:not([class*='bg-']) {
+    color: #86efac !important;
+  }
+}
+
+/* Keep the login portal selector intentionally light even when the dashboard uses dark mode. */
+body .login-panel,
+body .login-panel .bg-white,
+body .login-panel [class*='bg-white/'] {
+  background-color: #ffffff !important;
+}
+
+body .login-panel .text-slate-950,
+body .login-panel .text-slate-900,
+body .login-panel .text-slate-800,
+body .login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+body .login-panel .text-slate-600,
+body .login-panel .text-slate-500,
+body .login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+body .login-panel [class*='text-[#14533b]'],
+body .login-panel [class*='text-[#1b5e3f]'] {
+  color: #14533b !important;
+}
+
+body .login-panel input,
+body .login-panel button:not(.premium-button-primary) {
+  color: #0f172a !important;
+}
+
+body .login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
+}
+
+html:root:not(.light) body .login-panel,
+html:root:not(.light) body .login-panel .bg-white,
+html:root:not(.light) body .login-panel [class*='bg-white/'] {
+  background-color: #ffffff !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-950,
+html:root:not(.light) body .login-panel .text-slate-900,
+html:root:not(.light) body .login-panel .text-slate-800,
+html:root:not(.light) body .login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-600,
+html:root:not(.light) body .login-panel .text-slate-500,
+html:root:not(.light) body .login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:root:not(.light) body .login-panel .text-amber-800,
+html:root:not(.light) body .login-panel .text-amber-700,
+html:root:not(.light) body .login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
+}
+
+/* EOF: final table fit rules */
+
+/* Final TBC risk table override: keep actions visible without horizontal table drift. */
+.tbc-risk-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.tbc-risk-table th,
+.tbc-risk-table td {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.tbc-risk-table td span[class*='rounded'] {
+  max-width: 100% !important;
+  white-space: normal !important;
+}
+
+/* Final TBC risk table override: keep actions visible without horizontal table drift. */
+.tbc-risk-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.tbc-risk-table th,
+.tbc-risk-table td {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.tbc-risk-table td span[class*='rounded'] {
+  max-width: 100% !important;
+  white-space: normal !important;
+}
+
+html:root:not(.light) body .login-panel,
+html:root:not(.light) body .login-panel .bg-white,
+html:root:not(.light) body .login-panel [class*='bg-white/'] {
+  background-color: #ffffff !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-950,
+html:root:not(.light) body .login-panel .text-slate-900,
+html:root:not(.light) body .login-panel .text-slate-800,
+html:root:not(.light) body .login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-600,
+html:root:not(.light) body .login-panel .text-slate-500,
+html:root:not(.light) body .login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:root:not(.light) body .login-panel .text-amber-800,
+html:root:not(.light) body .login-panel .text-amber-700,
+html:root:not(.light) body .login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
+}
+
+html:root:not(.light) body .login-panel [class*='text-[#14533b]'],
+html:root:not(.light) body .login-panel [class*='text-[#1b5e3f]'] {
+  color: #14533b !important;
+}
+
+html:root:not(.light) body .login-panel input,
+html:root:not(.light) body .login-panel button:not(.premium-button-primary) {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
 :root {
+  --font-outfit: 'Outfit';
   color-scheme: light;
   --background: #f7f8f6;
   --foreground: #17211c;
@@ -168,9 +571,19 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Outfit' !important;
   }
   html {
     @apply font-sans;
+    font-family: 'Outfit' !important;
+  }
+
+  button,
+  input,
+  textarea,
+  select,
+  option {
+    font-family: inherit;
   }
 }
 
@@ -201,6 +614,15 @@
 
   .premium-button-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all focus:outline-none focus:ring-4 focus:ring-emerald-200 border border-slate-200 bg-white text-slate-800 hover:bg-slate-50;
+  }
+
+  button:disabled,
+  button[disabled] {
+    background-color: #334155 !important;
+    border-color: #475569 !important;
+    color: #cbd5e1 !important;
+    cursor: not-allowed;
+    opacity: 1 !important;
   }
 
   .premium-link {
@@ -681,4 +1103,64 @@
       border-color: rgb(71 85 105 / 0.8) !important;
     }
   }
+}
+
+/* Final login override: dashboard dark-mode rules should not invert the light portal selector. */
+body .login-panel,
+body .login-panel .bg-white,
+body .login-panel [class*='bg-white/'] {
+  background-color: #ffffff !important;
+}
+
+body .login-panel .text-slate-950,
+body .login-panel .text-slate-900,
+body .login-panel .text-slate-800,
+body .login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+body .login-panel .text-slate-600,
+body .login-panel .text-slate-500,
+body .login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+body .login-panel [class*='text-[#14533b]'],
+body .login-panel [class*='text-[#1b5e3f]'] {
+  color: #14533b !important;
+}
+
+body .login-panel input,
+body .login-panel button:not(.premium-button-primary) {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body .login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
+}
+
+html:root:not(.light) body .login-panel,
+html:root:not(.light) body .login-panel .bg-white,
+html:root:not(.light) body .login-panel [class*='bg-white/'] {
+  background-color: #ffffff !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-950,
+html:root:not(.light) body .login-panel .text-slate-900,
+html:root:not(.light) body .login-panel .text-slate-800,
+html:root:not(.light) body .login-panel .text-slate-700 {
+  color: #0f172a !important;
+}
+
+html:root:not(.light) body .login-panel .text-slate-600,
+html:root:not(.light) body .login-panel .text-slate-500,
+html:root:not(.light) body .login-panel .text-slate-400 {
+  color: #475569 !important;
+}
+
+html:root:not(.light) body .login-panel .text-amber-800,
+html:root:not(.light) body .login-panel .text-amber-700,
+html:root:not(.light) body .login-panel .premium-button-secondary.border-amber-200 {
+  color: #92400e !important;
 }

@@ -129,7 +129,7 @@ export default function SubmitClaimPage() {
 
   return (
     <AppLayout>
-      <div className="p-8 max-w-2xl">
+      <div className="p-8 w-full max-w-7xl">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Submit New Claim</h1>
         <p className="text-slate-600 mb-8">
           {currentRole === 'contractor'
@@ -142,7 +142,7 @@ export default function SubmitClaimPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="w-full space-y-6">
           <div className="bg-white rounded-lg border border-slate-200 p-6 space-y-6">
             <div>
               <label className="block text-sm font-medium text-slate-900 mb-2">Claim Type</label>

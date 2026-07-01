@@ -492,7 +492,7 @@ export default function RiskStatusPage() {
 
         {/* Pre-processing CFO Block */}
         {cfoItems.length > 0 && (
-          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-300 p-8">
+          <div className="bg-orange-50 rounded-lg border border-orange-300 p-8">
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
                 <AlertCircle className="w-6 h-6 text-orange-600" />
