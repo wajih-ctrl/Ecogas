@@ -10,12 +10,13 @@ import { mockPackages } from '@/lib/mock-data';
 export default function ClaimDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { claims, updateClaim } = useAppState();
+  const { claims, currentRole, currentUser, selectedContractor, updateClaim } = useAppState();
   const claimId = params.id as string;
   const claim = claims.find(c => c.id === claimId);
   const [newStatus, setNewStatus] = useState(claim?.status || '');
   const [showStatusModal, setShowStatusModal] = useState(false);
-  const [showActionConfirm, setShowActionConfirm] = useState<string | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<{ tone: 'success' | 'info'; message: string } | null>(null);
+  const canManageClaim = currentRole === 'admin' || currentRole === 'construction-manager';
 
   if (!claim) {
     return (
@@ -27,42 +28,74 @@ export default function ClaimDetailPage() {
     );
   }
 
+  const contractorIdentity = selectedContractor || currentUser?.contractor || currentUser?.name || '';
+  const canViewClaim = canManageClaim || claim.contractorName === contractorIdentity;
+
+  if (!canViewClaim) {
+    return (
+      <AppLayout>
+        <div className="p-8">
+          <div className="max-w-xl rounded-lg border border-slate-200 bg-white p-6">
+            <h1 className="text-2xl font-bold text-slate-900">Claim unavailable</h1>
+            <p className="mt-2 text-slate-600">Contractor users can only view claims submitted under their assigned contractor account.</p>
+            <button
+              type="button"
+              onClick={() => router.push('/my-claims')}
+              className="mt-5 premium-button-primary"
+            >
+              Back to My Claims
+            </button>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
   const handleStatusChange = () => {
-    if (newStatus && newStatus !== claim.status) {
-      const newAuditEntry = {
-        timestamp: new Date().toLocaleDateString(),
-        user: 'Alzbeta',
-        action: newStatus,
-        details: `Status updated to ${newStatus}`,
-      };
-      updateClaim(claim.id, { 
-        status: newStatus as any,
-        auditTrail: [...claim.auditTrail, newAuditEntry]
+    if (!canManageClaim) return;
+    if (!newStatus) return;
+
+    if (newStatus === claim.status) {
+      setActionFeedback({
+        tone: 'info',
+        message: `${claim.id} is already marked as ${claim.status}.`,
       });
       setShowStatusModal(false);
+      return;
     }
+
+    updateClaim(claim.id, { status: newStatus as any });
+    setActionFeedback({
+      tone: 'success',
+      message: `${claim.id} status updated to ${newStatus}.`,
+    });
+    setShowStatusModal(false);
   };
 
   const handleQuickAction = (action: string) => {
+    if (!canManageClaim) return;
     if (!claim) return;
-    const newAuditEntry = {
-      timestamp: new Date().toLocaleDateString(),
-      user: 'Alzbeta',
-      action: action,
-      details: `${action} by admin`,
-    };
-    let newStatus = claim.status;
-    if (action === 'Approve') newStatus = 'Approved';
-    if (action === 'Reject') newStatus = 'Rejected';
-    if (action === 'More Info') newStatus = 'More Info Requested';
-    if (action === 'Review') newStatus = 'Under Review';
-    if (action === 'Mark Overdue') newStatus = 'Overdue';
+    let targetStatus = claim.status;
+    if (action === 'Approve') targetStatus = 'Approved';
+    if (action === 'Reject') targetStatus = 'Rejected';
+    if (action === 'More Info') targetStatus = 'More Info Requested';
+    if (action === 'Review') targetStatus = 'Under Review';
+    if (action === 'Mark Overdue') targetStatus = 'Overdue';
+
+    if (targetStatus === claim.status) {
+      setActionFeedback({
+        tone: 'info',
+        message: `${claim.id} is already marked as ${claim.status}.`,
+      });
+      return;
+    }
     
-    updateClaim(claim.id, {
-      status: newStatus as any,
-      auditTrail: [...claim.auditTrail, newAuditEntry]
+    updateClaim(claim.id, { status: targetStatus as any });
+    setNewStatus(targetStatus);
+    setActionFeedback({
+      tone: 'success',
+      message: `${claim.id} status updated to ${targetStatus}.`,
     });
-    setShowActionConfirm(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -111,17 +144,32 @@ export default function ClaimDetailPage() {
                   <p className="text-sm text-slate-600 mb-1">Current Status</p>
                   <p className={`text-2xl font-bold ${getStatusColor(claim.status)}`}>{claim.status}</p>
                 </div>
-                <button
-                  onClick={() => {
-                    setNewStatus(claim.status);
-                    setShowStatusModal(true);
-                  }}
-                  className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50"
-                >
-                  Update Status
-                </button>
+                {canManageClaim && (
+                  <button
+                    onClick={() => {
+                      setNewStatus(claim.status);
+                      setShowStatusModal(true);
+                    }}
+                    className="px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50"
+                  >
+                    Update Status
+                  </button>
+                )}
               </div>
             </div>
+
+            {canManageClaim && actionFeedback && (
+              <div
+                role="status"
+                className={`rounded-lg border px-4 py-3 text-sm font-semibold ${
+                  actionFeedback.tone === 'success'
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                    : 'border-blue-200 bg-blue-50 text-blue-800'
+                }`}
+              >
+                {actionFeedback.message}
+              </div>
+            )}
 
             {/* Claim Details */}
             <div className="grid md:grid-cols-2 gap-4">
@@ -217,54 +265,60 @@ export default function ClaimDetailPage() {
             )}
 
             {/* Action Buttons */}
-            <div className="bg-slate-50 rounded-lg border border-slate-200 p-6">
-              <h3 className="text-lg font-bold text-slate-900 mb-4">Admin Actions</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => handleQuickAction('Approve')}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
-                >
-                  <Check className="w-4 h-4" />
-                  Approve
-                </button>
-                <button
-                  onClick={() => handleQuickAction('Reject')}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                  Reject
-                </button>
-                <button
-                  onClick={() => handleQuickAction('More Info')}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  More Info
-                </button>
-                <button
-                  onClick={() => handleQuickAction('Review')}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors"
-                >
-                  <AlertCircle className="w-4 h-4" />
-                  Review
-                </button>
-                <button
-                  onClick={() => {
-                    setNewStatus(claim.status);
-                    setShowStatusModal(true);
-                  }}
-                  className="col-span-2 px-4 py-3 bg-[#1b5e3f] hover:bg-[#0d3a24] text-white font-medium rounded-lg transition-colors"
-                >
-                  Update Status
-                </button>
-                <button
-                  onClick={() => router.back()}
-                  className="col-span-2 px-4 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
-                >
-                  Back
-                </button>
+            {canManageClaim && (
+              <div className="bg-slate-50 rounded-lg border border-slate-200 p-6">
+                <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="text-lg font-bold text-slate-900">Admin Actions</h3>
+                  <span className="text-sm font-semibold text-slate-600">Current: {claim.status}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => handleQuickAction('Approve')}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    <Check className="w-4 h-4" />
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleQuickAction('Reject')}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                    Reject
+                  </button>
+                  <button
+                    onClick={() => handleQuickAction('More Info')}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    More Info
+                  </button>
+                  <button
+                    onClick={() => handleQuickAction('Review')}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    <AlertCircle className="w-4 h-4" />
+                    Review
+                  </button>
+                  <button
+                    onClick={() => {
+                      setNewStatus(claim.status);
+                      setShowStatusModal(true);
+                    }}
+                    className="col-span-2 px-4 py-3 bg-[#1b5e3f] hover:bg-[#0d3a24] text-white font-medium rounded-lg transition-colors"
+                  >
+                    Update Status
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
+
+            <button
+              onClick={() => router.back()}
+              className="w-full px-4 py-3 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
+            >
+              Back
+            </button>
           </div>
 
           {/* Sidebar */}
@@ -320,7 +374,7 @@ export default function ClaimDetailPage() {
         </div>
 
         {/* Status Change Modal */}
-        {showStatusModal && (
+        {showStatusModal && canManageClaim && (
           <div className="modal-shell">
             <div className="modal-card max-w-md">
               <h2 className="text-xl font-bold text-slate-900 mb-6">Update Claim Status</h2>
