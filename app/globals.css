@@ -828,6 +828,14 @@ html:root:not(.light) body .login-panel button:not(.premium-button-primary) {
     background-color: #26302b !important;
   }
 
+  .dark table th {
+    color: #e5edf3 !important;
+  }
+
+  .dark table td {
+    color: #dbe7ef !important;
+  }
+
   .dark .bg-red-50,
   .dark .bg-red-100,
   .dark .bg-red-200 {
@@ -987,6 +995,14 @@ html:root:not(.light) body .login-panel button:not(.premium-button-primary) {
     :root:not(.light) .bg-slate-100,
     :root:not(.light) thead {
       background-color: #26302b !important;
+    }
+
+    :root:not(.light) table th {
+      color: #e5edf3 !important;
+    }
+
+    :root:not(.light) table td {
+      color: #dbe7ef !important;
     }
 
     :root:not(.light) .bg-red-50,
